@@ -47,6 +47,10 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
     public void onPlaceSelected(Place place) {
         LogUtility.d(TAG, "Place.getLatlong = " + place.getLatLng());
         LogUtility.d(TAG, "place.getAddress = " + place.getAddress().toString());
+
+        if (mPresenter != null) {
+            mPresenter.fetchCurrentWeatherDetail(place.getLatLng());
+        }
     }
 
     @Override

@@ -9,6 +9,22 @@ import android.app.Application;
  */
 public class MyWeatherApplication extends Application {
 
+    /**
+     * It holds the current instance of the class.
+     */
+    private static MyWeatherApplication instance;
 
+    /**
+     * @return Current instance of the class.
+     */
+    public static MyWeatherApplication getInstance() {
+        return instance;
+    }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        instance = this;
+    }
 }
