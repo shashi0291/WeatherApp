@@ -5,4 +5,10 @@
     <string name="str_weather_overview" translatable="false">few clouds</string>
     <string name="sample_tempreture">40 C</string>
     <string name="str_details">Details</string>
+    <string name="str_feels_like">Feels like</string>
+    <string name="str_wind">Wind</string>
+    <string name="str_humidity">Humidity</string>
+    <string name="str_max_temp">Max Temp</string>
+    <string name="str_min_temp">Min Temp</string>
+    <string name="str_powered_by">Powered by OpenWeatherMap</string>
 </resources>
