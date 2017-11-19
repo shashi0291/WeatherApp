@@ -6,10 +6,10 @@ import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-import static com.droid.us.myweatherapp.utility.ConstantUtility.APP_ID;
-import static com.droid.us.myweatherapp.utility.ConstantUtility.LATITUDE;
-import static com.droid.us.myweatherapp.utility.ConstantUtility.LONGITUDE;
-import static com.droid.us.myweatherapp.utility.ConstantUtility.WEATHER;
+import static com.droid.us.myweatherapp.utility.NWConstantUtility.APP_ID;
+import static com.droid.us.myweatherapp.utility.NWConstantUtility.LATITUDE;
+import static com.droid.us.myweatherapp.utility.NWConstantUtility.LONGITUDE;
+import static com.droid.us.myweatherapp.utility.NWConstantUtility.WEATHER;
 
 /**
  * TODO: Provide a brief summary of the class in one or two lines.

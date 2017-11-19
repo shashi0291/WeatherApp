@@ -2,6 +2,8 @@ package com.droid.us.myweatherapp.feature.weather;
 
 import com.droid.us.myweatherapp.MyWeatherApplication;
 import com.droid.us.myweatherapp.R;
+import com.droid.us.myweatherapp.database.callback.WeatherDBCallback;
+import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
 import com.droid.us.myweatherapp.network.callback.WeatherNWCallback;
 import com.droid.us.myweatherapp.network.datasource.NWWeatherDataSource;
 import com.droid.us.myweatherapp.network.server_model.Parent;
@@ -15,6 +17,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * TODO: Provide a brief summary of the class in one or two lines.
@@ -72,7 +76,33 @@ class WeatherModel implements WeatherContractor.Model {
 
     @Override
     public Single<Parent> fetchWeatherForCurrentDat(LatLng latLng) {
-        return new NWWeatherDataSource().getCurrentWeatherDetail(latLng, MyWeatherApplication.getInstance().getString(
-                R.string.str_openweather_api_key)).subscribeOn(Schedulers.io());
+        return new NWWeatherDataSource()
+                .getCurrentWeatherDetail(latLng, MyWeatherApplication.getInstance().getString(
+                R.string.str_openweather_api_key))
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public void updateDatabase(WeatherRealm weatherRealm, WeatherDBCallback callback) {
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.beginTransaction();
+            RealmResults<WeatherRealm> oldData = realm.where(WeatherRealm.class).findAll();
+            if (oldData != null) {
+                oldData.deleteAllFromRealm();
+            }
+
+            realm.copyToRealmOrUpdate(weatherRealm);
+            realm.commitTransaction();
+        } catch (Exception e) {
+            if (realm.isInTransaction()) {
+                realm.cancelTransaction();
+            }
+            throw e;
+        } finally {
+            if (!realm.isClosed()) {
+                realm.close();
+            }
+        }
     }
 }

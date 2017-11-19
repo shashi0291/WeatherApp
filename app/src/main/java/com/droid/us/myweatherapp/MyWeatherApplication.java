@@ -2,6 +2,10 @@ package com.droid.us.myweatherapp;
 
 import android.app.Application;
 
+import com.droid.us.myweatherapp.database.RealmManager;
+import com.facebook.stetho.Stetho;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
+
 /**
  * TODO: Provide a brief summary of the class in one or two lines.
  *
@@ -26,5 +30,15 @@ public class MyWeatherApplication extends Application {
         super.onCreate();
 
         instance = this;
+
+        // configure realm
+        new RealmManager().configureRealm();
+
+        // initialize Stetho for debugging purpose
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                        .build());
     }
 }

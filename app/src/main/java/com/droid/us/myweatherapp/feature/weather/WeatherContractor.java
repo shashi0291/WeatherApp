@@ -2,6 +2,8 @@ package com.droid.us.myweatherapp.feature.weather;
 
 import android.location.Location;
 
+import com.droid.us.myweatherapp.database.callback.WeatherDBCallback;
+import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
 import com.droid.us.myweatherapp.network.callback.WeatherNWCallback;
 import com.droid.us.myweatherapp.network.server_model.Parent;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,9 +28,14 @@ class WeatherContractor {
 
         Single<Parent> fetchWeatherForCurrentDat(LatLng latLng);
 
+        void updateDatabase(WeatherRealm weatherRealm, WeatherDBCallback weatherDBCallback);
+
     }
 
     interface View {
 
+        String getCountryName();
+
+        String getCityName();
     }
 }

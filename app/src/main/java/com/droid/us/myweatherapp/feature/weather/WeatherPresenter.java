@@ -1,7 +1,8 @@
 package com.droid.us.myweatherapp.feature.weather;
 
-import android.location.Location;
-
+import com.droid.us.myweatherapp.database.callback.WeatherDBCallback;
+import com.droid.us.myweatherapp.database.mapper.ServerToDBMapper;
+import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
 import com.droid.us.myweatherapp.network.callback.WeatherNWCallback;
 import com.droid.us.myweatherapp.network.server_model.Parent;
 import com.droid.us.myweatherapp.utility.LogUtility;
@@ -43,6 +44,13 @@ class WeatherPresenter implements WeatherContractor.Presenter {
            @Override
            public void onSuccess(Parent weather) {
                LogUtility.d(TAG, "Successfully data fetched from Server");
+               if (mView.get() != null) {
+                   weather.setCountryName(mView.get().getCountryName());
+                   weather.setCityName(mView.get().getCityName());
+
+                   updateDB(new ServerToDBMapper().map(weather));
+
+               }
            }
 
            @Override
@@ -50,6 +58,23 @@ class WeatherPresenter implements WeatherContractor.Presenter {
                LogUtility.e(TAG, "Failed to fetch data from Server: " + throwable.getMessage());
            }
        });
+
+    }
+
+    public void updateDB(WeatherRealm weatherRealm) {
+
+        mModel.updateDatabase(weatherRealm, new WeatherDBCallback() {
+
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable throwable) {
+
+            }
+        });
 
     }
 }

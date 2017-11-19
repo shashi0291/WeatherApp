@@ -5,7 +5,7 @@ package com.droid.us.myweatherapp.utility;
  *
  * @author TODO: Add your name when contributing to this class.
  */
-public interface ConstantUtility {
+public interface NWConstantUtility {
 
     String LATITUDE = "lat";
 
