@@ -145,7 +145,7 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
 
     @Override
     public void onError(Status status) {
-
+        LogUtility.e(TAG, "Error in fetching location: " + status.getStatusMessage());
     }
 
     @Override

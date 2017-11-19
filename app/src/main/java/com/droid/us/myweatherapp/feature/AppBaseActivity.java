@@ -6,6 +6,7 @@
  */
 package com.droid.us.myweatherapp.feature;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +41,7 @@ public abstract class AppBaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        // unbind the butterknife
         if (mButterKnifeUnbinder != null) {
             mButterKnifeUnbinder.unbind();
         }
@@ -48,6 +50,17 @@ public abstract class AppBaseActivity extends AppCompatActivity {
     // get the layout id from the hosting activity
     protected abstract int getLayoutId();
 
-    // to be implemented by the activity (teh oncreate is already called)
+    /**
+     * This method is a replacement for the {@link #onCreate(Bundle)}. This method will be invoked
+     * only after the {@link ButterKnife#bind(Activity)} call, hence avoiding any access of UI
+     * element before initializing of the same.
+     * <p>
+     * Once this method's implementation is completed
+     * {@link com.droid.us.myweatherapp.feature.weather.WeatherContractor.Presenter}
+     * will be invoked. Hence make sure your presenter is initialized at this point of time.
+     * </p>
+     *
+     * @param savedInstanceState bundle which can be stored.
+     */
     protected abstract void onCreateAfterBinding(@Nullable Bundle savedInstanceState);
 }
