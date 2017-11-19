@@ -1,5 +1,7 @@
 package com.droid.us.myweatherapp.feature.weather;
 
+import android.text.TextUtils;
+
 import com.droid.us.myweatherapp.database.callback.WeatherDBCallback;
 import com.droid.us.myweatherapp.database.mapper.ServerToDBMapper;
 import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
@@ -51,24 +53,33 @@ class WeatherPresenter implements WeatherContractor.Presenter {
     @Override
     public void fetchCurrentWeatherDetail(LatLng latLng) {
 
-       mModel.getWeatherDetail(latLng, new WeatherNWCallback() {
-           @Override
-           public void onSuccess(Parent weather) {
-               LogUtility.d(TAG, "Successfully data fetched from Server");
-               if (mView.get() != null) {
-                   weather.setCountryName(mView.get().getCountryName());
-                   weather.setCityName(mView.get().getCityName());
-                   WeatherRealm weatherRealm = new ServerToDBMapper().map(weather);
-                   mView.get().populateDataOnUI(weatherRealm);
-                   updateDB(weatherRealm);
-               }
-           }
+        if (mView.get() != null) {
+            mView.get().showProgressBar();
+        }
 
-           @Override
-           public void onError(@NonNull Throwable throwable) {
-               LogUtility.e(TAG, "Failed to fetch data from Server: " + throwable.getMessage());
-           }
-       });
+        mModel.getWeatherDetail(latLng, new WeatherNWCallback() {
+            @Override
+            public void onSuccess(Parent weather) {
+                LogUtility.d(TAG, "Successfully data fetched from Server");
+                if (mView.get() != null) {
+                    weather.setCountryName(mView.get().getCountryName());
+                    weather.setCityName(mView.get().getCityName());
+                    WeatherRealm weatherRealm = new ServerToDBMapper().map(weather);
+                    mView.get().populateDataOnUI(weatherRealm);
+                    //updateDB(weatherRealm);
+                    saveDataInDB(weatherRealm);
+                    mView.get().dismissProgressBar();
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable throwable) {
+                LogUtility.e(TAG, "Failed to fetch data from Server: " + throwable.getMessage());
+                if (mView.get() != null) {
+                    mView.get().dismissProgressBar();
+                }
+            }
+        });
 
     }
 
@@ -89,8 +100,24 @@ class WeatherPresenter implements WeatherContractor.Presenter {
 
     }
 
+    public void saveDataInDB(WeatherRealm weatherRealm) {
+        mDisposable.add(mModel.saveDataInDB(weatherRealm)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<WeatherRealm>() {
+                    @Override
+                    public void accept(@NonNull WeatherRealm weatherRealm) throws Exception {
+                        LogUtility.d(TAG, "DB insertion successful");
+                    }
+                }));
+    }
+
+
     @Override
     public void fetchLastSearchedCity() {
+        if (mView.get() != null) {
+            mView.get().showProgressBar();
+        }
         mDisposable.add(mModel.fetchLastSearchedCityData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -98,14 +125,23 @@ class WeatherPresenter implements WeatherContractor.Presenter {
                     @Override
                     public void accept(@NonNull WeatherRealm weatherRealm) throws Exception {
                         if (mView.get() != null) {
-                            if (weatherRealm != null) {
+                            if (weatherRealm != null && !TextUtils.isEmpty(weatherRealm.getCityName())) {
                                 mView.get().populateDataOnUI(weatherRealm);
                             } else {
                                 mView.get().populateDefaultScreenOnUI();
                             }
+                            mView.get().dismissProgressBar();
                         }
                     }
-                }, new RxError(TAG)));
+                }, new RxError(TAG) {
+                    @Override
+                    public void acceptNow(@io.reactivex.annotations.NonNull
+                                                  Throwable throwable) throws Exception {
+                        if (mView.get() != null) {
+                            mView.get().dismissProgressBar();
+                        }
+                    }
+                }));
     }
 
 

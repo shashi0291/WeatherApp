@@ -41,7 +41,7 @@ class WeatherModel implements WeatherContractor.Model {
      *
      * @param weatherPresenter Presenter that contains all the business logic.
      */
-    WeatherModel (WeatherContractor.Presenter weatherPresenter) {
+    WeatherModel(WeatherContractor.Presenter weatherPresenter) {
 
         mWeatherPresenter = weatherPresenter;
 
@@ -54,7 +54,7 @@ class WeatherModel implements WeatherContractor.Model {
 
         mDisposable.add(fetchWeatherForCurrentDat(latLng)
                 .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Parent>() {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Parent>() {
                     @Override
                     public void accept(@NonNull Parent parent) throws Exception {
                         LogUtility.d(TAG, "Successfully data fetched from server in Weather Model");
@@ -80,7 +80,7 @@ class WeatherModel implements WeatherContractor.Model {
     public Single<Parent> fetchWeatherForCurrentDat(LatLng latLng) {
         return new NWWeatherDataSource()
                 .getCurrentWeatherDetail(latLng, MyWeatherApplication.getInstance().getString(
-                R.string.str_openweather_api_key))
+                        R.string.str_openweather_api_key))
                 .subscribeOn(Schedulers.io());
     }
 
@@ -109,6 +109,37 @@ class WeatherModel implements WeatherContractor.Model {
     }
 
     @Override
+    public Flowable<WeatherRealm> saveDataInDB(final WeatherRealm weatherRealm) {
+        return Flowable.just(true).map(new Function<Boolean, WeatherRealm>() {
+            @Override
+            public WeatherRealm apply(@NonNull Boolean aBoolean) throws Exception {
+                Realm realm = Realm.getDefaultInstance();
+                try {
+                    realm.beginTransaction();
+                    RealmResults<WeatherRealm> oldData = realm.where(WeatherRealm.class).findAll();
+                    if (oldData != null) {
+                        oldData.deleteAllFromRealm();
+                    }
+
+                    realm.copyToRealmOrUpdate(weatherRealm);
+                    realm.commitTransaction();
+                } catch (Exception e) {
+                    if (realm.isInTransaction()) {
+                        realm.cancelTransaction();
+                    }
+                    throw e;
+                } finally {
+                    if (!realm.isClosed()) {
+                        realm.close();
+                    }
+                }
+                return weatherRealm;
+            }
+
+        });
+    }
+
+    @Override
     public Flowable<WeatherRealm> fetchLastSearchedCityData() {
         return Flowable.just(true).map(new Function<Boolean, WeatherRealm>() {
             @Override
@@ -116,18 +147,25 @@ class WeatherModel implements WeatherContractor.Model {
                 Realm realm = Realm.getDefaultInstance();
                 try {
                     realm.beginTransaction();
-                    WeatherRealm personRealm = realm.where(WeatherRealm.class).findFirst();
+
+                    WeatherRealm weather = realm.where(WeatherRealm.class).findFirst();
                     WeatherRealm weatherRealm = new WeatherRealm();
-                    weatherRealm.setCountryName(personRealm.getCountryName());
-                    weatherRealm.setCityName(personRealm.getCityName());
-                    weatherRealm.setDate(personRealm.getDate());
-                    weatherRealm.setHumidity(personRealm.getHumidity());
-                    weatherRealm.setIcon(personRealm.getIcon());
-                    weatherRealm.setTemp(personRealm.getTemp());
-                    weatherRealm.setTempMin(personRealm.getTempMin());
-                    weatherRealm.setTempMax(personRealm.getTempMax());
-                    weatherRealm.setWeatherDescription(personRealm.getWeatherDescription());
-                    weatherRealm.setWeatherOverview(personRealm.getWeatherOverview());
+
+                    if (weather != null) {
+
+                        weatherRealm.setCountryName(weather.getCountryName());
+                        weatherRealm.setCityName(weather.getCityName());
+                        weatherRealm.setDate(weather.getDate());
+                        weatherRealm.setHumidity(weather.getHumidity());
+                        weatherRealm.setIcon(weather.getIcon());
+                        weatherRealm.setTemp(weather.getTemp());
+                        weatherRealm.setTempMin(weather.getTempMin());
+                        weatherRealm.setTempMax(weather.getTempMax());
+                        weatherRealm.setWeatherDescription(weather.getWeatherDescription());
+                        weatherRealm.setWeatherOverview(weather.getWeatherOverview());
+
+
+                    }
                     return weatherRealm;
                 } catch (Throwable e) {
                     if (realm.isInTransaction()) {

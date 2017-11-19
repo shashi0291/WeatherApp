@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.droid.us.myweatherapp.R;
@@ -76,6 +77,9 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
 
     @BindView(R.id.tv_weather_details_not_available)
     TextView tvWeatherDetailsNotAvailable;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -194,6 +198,20 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
     public void populateDefaultScreenOnUI() {
         llWeatherDetailsAvailable.setVisibility(View.GONE);
         tvWeatherDetailsNotAvailable.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showProgressBar() {
+        if (progressBar.getVisibility() != View.VISIBLE) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void dismissProgressBar() {
+        if (progressBar.getVisibility() != View.GONE) {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
 

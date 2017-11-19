@@ -21,6 +21,8 @@ class WeatherContractor {
         void fetchCurrentWeatherDetail(LatLng latLng);
 
         void fetchLastSearchedCity();
+
+        void saveDataInDB(WeatherRealm weatherRealm);
     }
 
     interface Model {
@@ -33,6 +35,8 @@ class WeatherContractor {
 
         Flowable<WeatherRealm> fetchLastSearchedCityData();
 
+        Flowable<WeatherRealm> saveDataInDB(WeatherRealm  weatherRealm);
+
     }
 
     interface View {
@@ -44,5 +48,9 @@ class WeatherContractor {
         void populateDataOnUI(WeatherRealm weatherRealm);
 
         void populateDefaultScreenOnUI();
+
+        void showProgressBar();
+
+        void dismissProgressBar();
     }
 }
