@@ -161,7 +161,8 @@ class WeatherModel implements WeatherContractor.Model {
                     WeatherRealm weatherRealm = new WeatherRealm();
 
                     if (weather != null) {
-
+                        // setting in a completely new object is necessary as the actual realm object
+                        // becomes invalid as soon as the realm.close() is executed.
                         weatherRealm.setCountryName(weather.getCountryName());
                         weatherRealm.setCityName(weather.getCityName());
                         weatherRealm.setDate(weather.getDate());
@@ -172,8 +173,7 @@ class WeatherModel implements WeatherContractor.Model {
                         weatherRealm.setTempMax(weather.getTempMax());
                         weatherRealm.setWeatherDescription(weather.getWeatherDescription());
                         weatherRealm.setWeatherOverview(weather.getWeatherOverview());
-
-
+                        weatherRealm.setWindSpeed(weather.getWindSpeed());
                     }
                     return weatherRealm;
                 } catch (Throwable e) {
