@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">MyWeatherApp</string>
+    <string name="app_name">WeatherApp</string>
+
+    <string name="str_location" translatable="false">London, UK</string>
+    <string name="str_weather_overview" translatable="false">few clouds</string>
+    <string name="sample_tempreture">40 C</string>
+    <string name="str_details">Details</string>
 </resources>
