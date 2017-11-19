@@ -11,4 +11,5 @@
     <string name="str_max_temp">Max Temp</string>
     <string name="str_min_temp">Min Temp</string>
     <string name="str_powered_by">Powered by OpenWeatherMap</string>
+    <string name="str_default_text">Please search your city</string>
 </resources>

@@ -5,7 +5,9 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.droid.us.myweatherapp.R;
@@ -69,6 +71,12 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
     @BindView(R.id.iv_weather_icon)
     ImageView ivWeatherIcon;
 
+    @BindView(R.id.ll_weather_details)
+    LinearLayout llWeatherDetailsAvailable;
+
+    @BindView(R.id.tv_weather_details_not_available)
+    TextView tvWeatherDetailsNotAvailable;
+
 
     ///////////////////////////////////////////////////////////////////////////
     // Overridden methods
@@ -128,6 +136,10 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
     @Override
     public void populateDataOnUI(@Nullable WeatherRealm weatherRealm) {
         if (weatherRealm != null) {
+
+            llWeatherDetailsAvailable.setVisibility(View.VISIBLE);
+            tvWeatherDetailsNotAvailable.setVisibility(View.GONE);
+
             if (!TextUtils.isEmpty(weatherRealm.getCityName())) {
                 // set the location name
                 tvLocation.setText(weatherRealm.getCityName());
@@ -180,7 +192,8 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
 
     @Override
     public void populateDefaultScreenOnUI() {
-
+        llWeatherDetailsAvailable.setVisibility(View.GONE);
+        tvWeatherDetailsNotAvailable.setVisibility(View.VISIBLE);
     }
 
 
