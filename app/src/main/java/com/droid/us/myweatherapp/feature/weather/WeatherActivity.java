@@ -1,3 +1,9 @@
+/*
+ * File Name : WeatherActivity.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.feature.weather;
 
 import android.location.Address;
@@ -28,6 +34,10 @@ import java.util.Locale;
 
 import butterknife.BindView;
 
+/**
+ * This is the welcome activity of the project. It allows user to search for the city whose weather
+ * is to be looked and it displays the weather details.
+ */
 public class WeatherActivity extends AppBaseActivity implements WeatherContractor.View,
         PlaceSelectionListener {
 
@@ -37,12 +47,16 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
 
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
+    // presenter class instance
     private WeatherContractor.Presenter mPresenter;
 
+    // Autocomplete fragment for the search functionality
     PlaceAutocompleteFragment placeAutocompleteFragment;
 
+    // country name
     private String mCountryName;
 
+    // city name
     private String mCityName;
 
     @BindView(R.id.tv_location)
@@ -98,25 +112,32 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
         initUI();
     }
 
+    /**
+     * Control reaches here as soon as user has entered the location whose weather is to be found
+     *
+     * @param place Google place object
+     */
     @Override
     public void onPlaceSelected(Place place) {
-        LogUtility.d(TAG, "Place.getLatlong = " + place.getLatLng());
-        LogUtility.d(TAG, "place.getAddress = " + place.getAddress().toString());
 
+        // deduce the country name and place related data using Geocode API
         Geocoder gcd = new Geocoder(this, Locale.getDefault());
+
         List<Address> address = null;
         try {
             address = gcd.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
         } catch (IOException e) {
-            // todo not able to find the address
-            e.printStackTrace();
+            LogUtility.e(TAG, "Not able to get the country name" + e.getMessage()); // Country name is not needed
         }
 
         if (address != null && address.size() > 0) {
             mCountryName = address.get(0).getCountryName();
-            mCityName = (String) place.getName();
         }
 
+        // get the city name
+        mCityName = (String) place.getName();
+
+        // ask presenter to search for weather
         if (mPresenter != null) {
             mPresenter.fetchCurrentWeatherDetail(place.getLatLng());
         }
@@ -137,6 +158,13 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
         return mCityName;
     }
 
+    /**
+     * Populate data on the UI.
+     * <p>
+     * !!!!! This method could have been written more properly if I had some more time !!!!
+     *
+     * @param weatherRealm weather object
+     */
     @Override
     public void populateDataOnUI(@Nullable WeatherRealm weatherRealm) {
         if (weatherRealm != null) {
@@ -147,35 +175,49 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
             if (!TextUtils.isEmpty(weatherRealm.getCityName())) {
                 // set the location name
                 tvLocation.setText(weatherRealm.getCityName());
+            } else {
+                tvMinTemp.setText(AppConstants.EMPTY);
             }
 
             if (!TextUtils.isEmpty(weatherRealm.getWeatherOverview())) {
                 //set overview
                 tvWeatherOverview.setText(weatherRealm.getWeatherOverview());
+            } else {
+                tvMinTemp.setText(AppConstants.EMPTY);
             }
 
             if (!TextUtils.isEmpty(weatherRealm.getWeatherDescription())) {
                 tvFeelsLike.setText(weatherRealm.getWeatherDescription());
+            } else {
+                tvMinTemp.setText(AppConstants.EMPTY);
             }
 
             if (weatherRealm.getHumidity() != null) {
                 String humidity = weatherRealm.getHumidity() + AppConstants.UNIT_HUMIDITY;
                 tvHumidity.setText(humidity);
+            } else {
+                tvMinTemp.setText(AppConstants.EMPTY);
             }
 
             if (weatherRealm.getTemp() != null) {
                 String temp = weatherRealm.getTemp() + AppConstants.DEGREE_CELCIUS;
                 tvTemp.setText(temp);
+            } else {
+                tvMinTemp.setText(AppConstants.EMPTY);
             }
 
             if (weatherRealm.getTempMax() != null) {
                 String maxTemp = weatherRealm.getTempMax() + AppConstants.DEGREE_CELCIUS;
                 tvMaxTemp.setText(maxTemp);
+            } else {
+                tvMinTemp.setText(AppConstants.EMPTY);
             }
 
             if (weatherRealm.getTempMin() != null) {
                 String minTemp = weatherRealm.getTempMin() + AppConstants.DEGREE_CELCIUS;
                 tvMinTemp.setText(minTemp);
+            } else {
+                tvMinTemp.setText(AppConstants.EMPTY);
             }
 
             if (weatherRealm.getWindSpeed() != null) {
@@ -185,6 +227,7 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
                 tvWindSpeed.setText(AppConstants.EMPTY);
             }
 
+            // set the icon using Picasso
             if (!TextUtils.isEmpty(weatherRealm.getIcon())) {
                 Picasso.with(WeatherActivity.this)
                         .load(getString(R.string.str_open_weather_image_url)
@@ -194,12 +237,18 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
         }
     }
 
+    /**
+     * Populate default UI
+     */
     @Override
     public void populateDefaultScreenOnUI() {
         llWeatherDetailsAvailable.setVisibility(View.GONE);
         tvWeatherDetailsNotAvailable.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Display progress bar
+     */
     @Override
     public void showProgressBar() {
         if (progressBar.getVisibility() != View.VISIBLE) {
@@ -207,6 +256,9 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
         }
     }
 
+    /**
+     * Dismiss progress bar
+     */
     @Override
     public void dismissProgressBar() {
         if (progressBar.getVisibility() != View.GONE) {
@@ -219,6 +271,9 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
     // Private methods
     ///////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Initialize the UI components
+     */
     private void initUI() {
 
         placeAutocompleteFragment =

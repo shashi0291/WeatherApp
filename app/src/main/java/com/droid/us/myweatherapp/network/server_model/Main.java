@@ -1,13 +1,20 @@
+/*
+ * File Name : Main.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.network.server_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Bean class - represents weather related details
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi pal
  */
+//// TODO: 11/19/17 to change the class name later
 public class Main {
     @SerializedName("temp")
     @Expose
@@ -35,14 +42,17 @@ public class Main {
         return temp;
     }
 
+    @SuppressWarnings("unused")
     public void setTemp(Double temp) {
         this.temp = temp;
     }
 
+    @SuppressWarnings("unused")
     public Double getPressure() {
         return pressure;
     }
 
+    @SuppressWarnings("unused")
     public void setPressure(Double pressure) {
         this.pressure = pressure;
     }
@@ -51,6 +61,7 @@ public class Main {
         return humidity;
     }
 
+    @SuppressWarnings("unused")
     public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
@@ -59,6 +70,7 @@ public class Main {
         return tempMin;
     }
 
+    @SuppressWarnings("unused")
     public void setTempMin(Double tempMin) {
         this.tempMin = tempMin;
     }
@@ -67,22 +79,27 @@ public class Main {
         return tempMax;
     }
 
+    @SuppressWarnings("unused")
     public void setTempMax(Double tempMax) {
         this.tempMax = tempMax;
     }
 
+    @SuppressWarnings("unused")
     public Double getSeaLevel() {
         return seaLevel;
     }
 
+    @SuppressWarnings("unused")
     public void setSeaLevel(Double seaLevel) {
         this.seaLevel = seaLevel;
     }
 
+    @SuppressWarnings("unused")
     public Double getGrndLevel() {
         return grndLevel;
     }
 
+    @SuppressWarnings("unused")
     public void setGrndLevel(Double grndLevel) {
         this.grndLevel = grndLevel;
     }

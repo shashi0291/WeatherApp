@@ -1,3 +1,9 @@
+/*
+ * File Name : WeatherService.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.network.service;
 
 import com.droid.us.myweatherapp.network.server_model.Parent;
@@ -13,14 +19,22 @@ import static com.droid.us.myweatherapp.utility.NWConstantUtility.UNIT;
 import static com.droid.us.myweatherapp.utility.NWConstantUtility.WEATHER;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Interface to provide the webservice call URL
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public interface WeatherService {
 
-    //http://api.openweathermap.org/data/2.5/weather?lat=40.7128&lon=74.0060&appid=e37dececec7a87674cc2018b3ecadd2e
-
+    /**
+     * Creates the URL to get the current weather data based on the searched location
+     * @param latitude latitude
+     * @param longitude longitude
+     * @param appId app ID
+     * @param unit Unit (metric)
+     * @return complete URL
+     *
+     * Sample URL:- http://api.openweathermap.org/data/2.5/weather?lat=40.7128&lon=74.0060&appid=e37dececec7a87674cc2018b3ecadd2e
+     */
     @GET(WEATHER)
     Single<Parent> getCurrentWeatherDetails(
       @Query(LATITUDE) String latitude,

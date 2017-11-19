@@ -1,3 +1,9 @@
+/*
+ * File Name : BaseServer.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.network;
 
 import retrofit2.Retrofit;
@@ -5,9 +11,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Class responsible to provide the Retrofit instance
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public class BaseServer {
 

@@ -1,12 +1,18 @@
+/*
+ * File Name : Weather.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.network.server_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Bean class -  represents the weather related details
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public class Weather {
 

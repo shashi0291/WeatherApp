@@ -1,3 +1,9 @@
+/*
+ * File Name : NWWeatherDataSource.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.network.datasource;
 
 import com.droid.us.myweatherapp.MyWeatherApplication;
@@ -11,13 +17,21 @@ import com.google.android.gms.maps.model.LatLng;
 import io.reactivex.Single;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Gets teh Retrofit instance, interacts with {@link WeatherService} to get the actual URL.
+ * And then initiates the web call request.
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public class NWWeatherDataSource {
 
+    /**
+     * Initiates the web service call by getting the instance of retrofit
+     * @param latLng lat long
+     * @param appId app id (saved locally)
+     * @return Single<ServerWeatherObject>
+     */
     public Single<Parent> getCurrentWeatherDetail(LatLng latLng, String appId) {
+
         return BaseServer
                 .getRetrofit(MyWeatherApplication.getInstance()
                         .getString(R.string.str_open_weather_base_url))

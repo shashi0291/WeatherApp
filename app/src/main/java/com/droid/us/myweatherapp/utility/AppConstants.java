@@ -1,9 +1,15 @@
+/*
+ * File Name : AppConstants.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.utility;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Class responsible to hold the App level constants
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public class AppConstants {
 

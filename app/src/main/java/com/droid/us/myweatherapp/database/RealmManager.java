@@ -1,3 +1,9 @@
+/*
+ * File Name : RealmManager.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.database;
 
 import com.droid.us.myweatherapp.MyWeatherApplication;
@@ -10,9 +16,9 @@ import static com.droid.us.myweatherapp.utility.DBConstantUtility.DB_NAME;
 import static com.droid.us.myweatherapp.utility.DBConstantUtility.SCHEMA_VERSION;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Class responsible to initialize the Realm DB configuration
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public class RealmManager {
 
@@ -27,6 +33,10 @@ public class RealmManager {
         Realm.setDefaultConfiguration(getRealmConfig());
     }
 
+    /**
+     * Private method to set the realm related configuration
+     * @return RealmConfig object
+     */
     private RealmConfiguration getRealmConfig() {
         RealmConfiguration.Builder builder = new RealmConfiguration.Builder()
                 .name(DB_NAME)

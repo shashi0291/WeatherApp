@@ -1,9 +1,15 @@
+/*
+ * File Name : NWConstantUtility.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.utility;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Class responsible to hold Network related constants
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public interface NWConstantUtility {
 
@@ -18,5 +24,4 @@ public interface NWConstantUtility {
     String UNIT = "units";
 
     String UNIT_METRIC = "metric";
-
 }

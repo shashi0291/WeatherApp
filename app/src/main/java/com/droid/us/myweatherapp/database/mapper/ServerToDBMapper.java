@@ -1,12 +1,20 @@
+/*
+ * File Name : ServerToDBMapper.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.database.mapper;
 
 import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
 import com.droid.us.myweatherapp.network.server_model.Parent;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * This class implemets the {@link Mapper} class. Here, the OpenWeatherOrg compatible object is
+ * transformed into the {@link WeatherRealm} comatible class so that the DB operations can be
+ * performed on that.
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public class ServerToDBMapper implements Mapper<Parent, WeatherRealm> {
 
@@ -23,6 +31,7 @@ public class ServerToDBMapper implements Mapper<Parent, WeatherRealm> {
         weatherRealm.setTempMax(parent.getMain().getTempMax());
         weatherRealm.setWeatherDescription(parent.getWeather().get(0).getDescription());
         weatherRealm.setWeatherOverview(parent.getWeather().get(0).getMain());
+        weatherRealm.setWindSpeed(parent.getWind().getSpeed());
         return weatherRealm;
     }
 }

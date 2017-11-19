@@ -1,8 +1,13 @@
+/*
+ * File Name : WeatherModel.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.feature.weather;
 
 import com.droid.us.myweatherapp.MyWeatherApplication;
 import com.droid.us.myweatherapp.R;
-import com.droid.us.myweatherapp.database.callback.WeatherDBCallback;
 import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
 import com.droid.us.myweatherapp.network.callback.WeatherNWCallback;
 import com.droid.us.myweatherapp.network.datasource.NWWeatherDataSource;
@@ -23,15 +28,13 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * This class is the brain of the app. Carries out all operation related to the NW and DB.
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 class WeatherModel implements WeatherContractor.Model {
 
     private final String TAG = WeatherModel.class.getSimpleName();
-
-    private final WeatherContractor.Presenter mWeatherPresenter;
 
     private final CompositeDisposable mDisposable;
 
@@ -43,12 +46,19 @@ class WeatherModel implements WeatherContractor.Model {
      */
     WeatherModel(WeatherContractor.Presenter weatherPresenter) {
 
-        mWeatherPresenter = weatherPresenter;
+        @SuppressWarnings("unused") // to be used later
+                WeatherContractor.Presenter mWeatherPresenter = weatherPresenter;
 
         mDisposable = new CompositeDisposable();
     }
 
 
+    /**
+     * Method responsible to get the weather details from the server
+     *
+     * @param latLng            latlong of the searched location
+     * @param weatherNWCallback status callback
+     */
     @Override
     public void getWeatherDetail(LatLng latLng, final WeatherNWCallback weatherNWCallback) {
 
@@ -57,7 +67,9 @@ class WeatherModel implements WeatherContractor.Model {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Parent>() {
                     @Override
                     public void accept(@NonNull Parent parent) throws Exception {
+
                         LogUtility.d(TAG, "Successfully data fetched from server in Weather Model");
+
                         if (weatherNWCallback != null && parent != null) {
                             weatherNWCallback.onSuccess(parent);
                         }
@@ -66,6 +78,7 @@ class WeatherModel implements WeatherContractor.Model {
                 }, new RxError(TAG) {
                     @Override
                     public void acceptNow(@NonNull Throwable throwable) throws Exception {
+
                         LogUtility.d(TAG, "### fetchAssetDeltaNetworkCall filter throwable : "
                                 + throwable.getMessage());
 
@@ -76,38 +89,26 @@ class WeatherModel implements WeatherContractor.Model {
                 }));
     }
 
+    /**
+     * Initiates the server interaction to get the weather data
+     *
+     * @param latLng lat long of the searched location
+     * @return Single<ParentWeather> object
+     */
     @Override
     public Single<Parent> fetchWeatherForCurrentDat(LatLng latLng) {
         return new NWWeatherDataSource()
-                .getCurrentWeatherDetail(latLng, MyWeatherApplication.getInstance().getString(
-                        R.string.str_openweather_api_key))
+                .getCurrentWeatherDetail(latLng,
+                        MyWeatherApplication.getInstance().getString(
+                                R.string.str_openweather_api_key))
                 .subscribeOn(Schedulers.io());
     }
 
-    @Override
-    public void updateDatabase(WeatherRealm weatherRealm, WeatherDBCallback callback) {
-        Realm realm = Realm.getDefaultInstance();
-        try {
-            realm.beginTransaction();
-            RealmResults<WeatherRealm> oldData = realm.where(WeatherRealm.class).findAll();
-            if (oldData != null) {
-                oldData.deleteAllFromRealm();
-            }
-
-            realm.copyToRealmOrUpdate(weatherRealm);
-            realm.commitTransaction();
-        } catch (Exception e) {
-            if (realm.isInTransaction()) {
-                realm.cancelTransaction();
-            }
-            throw e;
-        } finally {
-            if (!realm.isClosed()) {
-                realm.close();
-            }
-        }
-    }
-
+    /**
+     * Method responsible to save/update the DB with the latest available data
+     *
+     * @param weatherRealm DB compatible object
+     */
     @Override
     public Flowable<WeatherRealm> saveDataInDB(final WeatherRealm weatherRealm) {
         return Flowable.just(true).map(new Function<Boolean, WeatherRealm>() {
@@ -139,6 +140,14 @@ class WeatherModel implements WeatherContractor.Model {
         });
     }
 
+    /**
+     * As per the current requirement, the last searched City data should be displayed to user once
+     * the app is relaunched. This method is resposible to check if any precious data exists in DB
+     * or not.
+     * If exists, send it back to {@link WeatherPresenter} so that the data can be populated on UI
+     *
+     * @return Flowable object
+     */
     @Override
     public Flowable<WeatherRealm> fetchLastSearchedCityData() {
         return Flowable.just(true).map(new Function<Boolean, WeatherRealm>() {

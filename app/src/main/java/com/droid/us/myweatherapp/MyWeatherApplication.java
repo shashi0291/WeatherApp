@@ -1,3 +1,9 @@
+/*
+ * File Name : MyWeatherApplication.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp;
 
 import android.app.Application;
@@ -7,9 +13,9 @@ import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * Application class - responsible to initialize all global configurable items
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public class MyWeatherApplication extends Application {
 
