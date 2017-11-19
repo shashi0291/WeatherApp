@@ -1,3 +1,9 @@
+/*
+ * File Name : AppBaseActivity.java
+ * Project : WeatherApp
+ * Created by : Shashi
+ * Date : November 19, 2017
+ */
 package com.droid.us.myweatherapp.feature;
 
 import android.os.Bundle;
@@ -8,9 +14,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * TODO: Provide a brief summary of the class in one or two lines.
+ * This class is created keeping in mind that, all activities needs not to be written from scratch.
+ * It provides the basic implementation of any activity.
  *
- * @author TODO: Add your name when contributing to this class.
+ * @author Shashi Pal
  */
 public abstract class AppBaseActivity extends AppCompatActivity {
 
@@ -23,6 +30,7 @@ public abstract class AppBaseActivity extends AppCompatActivity {
 
         setContentView(getLayoutId());
 
+        // get butterknife initialized
         mButterKnifeUnbinder = ButterKnife.bind(this);
 
         onCreateAfterBinding(savedInstanceState);
@@ -37,7 +45,9 @@ public abstract class AppBaseActivity extends AppCompatActivity {
         }
     }
 
+    // get the layout id from the hosting activity
     protected abstract int getLayoutId();
 
+    // to be implemented by the activity (teh oncreate is already called)
     protected abstract void onCreateAfterBinding(@Nullable Bundle savedInstanceState);
 }
