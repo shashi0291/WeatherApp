@@ -130,6 +130,7 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
         if (weatherRealm != null) {
             if (!TextUtils.isEmpty(weatherRealm.getCityName())) {
                 // set the location name
+                tvLocation.setText(weatherRealm.getCityName());
             }
 
             if (!TextUtils.isEmpty(weatherRealm.getWeatherOverview())) {
