@@ -9,6 +9,7 @@ import retrofit2.http.Query;
 import static com.droid.us.myweatherapp.utility.NWConstantUtility.APP_ID;
 import static com.droid.us.myweatherapp.utility.NWConstantUtility.LATITUDE;
 import static com.droid.us.myweatherapp.utility.NWConstantUtility.LONGITUDE;
+import static com.droid.us.myweatherapp.utility.NWConstantUtility.UNIT;
 import static com.droid.us.myweatherapp.utility.NWConstantUtility.WEATHER;
 
 /**
@@ -24,6 +25,7 @@ public interface WeatherService {
     Single<Parent> getCurrentWeatherDetails(
       @Query(LATITUDE) String latitude,
       @Query(LONGITUDE) String longitude,
-      @Query(APP_ID) String appId
+      @Query(APP_ID) String appId,
+      @Query(UNIT) String unit
     );
 }

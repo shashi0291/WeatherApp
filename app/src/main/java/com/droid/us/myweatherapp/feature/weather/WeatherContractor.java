@@ -1,13 +1,12 @@
 package com.droid.us.myweatherapp.feature.weather;
 
-import android.location.Location;
-
 import com.droid.us.myweatherapp.database.callback.WeatherDBCallback;
 import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
 import com.droid.us.myweatherapp.network.callback.WeatherNWCallback;
 import com.droid.us.myweatherapp.network.server_model.Parent;
 import com.google.android.gms.maps.model.LatLng;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 /**
@@ -20,6 +19,8 @@ class WeatherContractor {
     interface Presenter {
 
         void fetchCurrentWeatherDetail(LatLng latLng);
+
+        void fetchLastSearchedCity();
     }
 
     interface Model {
@@ -30,6 +31,8 @@ class WeatherContractor {
 
         void updateDatabase(WeatherRealm weatherRealm, WeatherDBCallback weatherDBCallback);
 
+        Flowable<WeatherRealm> fetchLastSearchedCityData();
+
     }
 
     interface View {
@@ -37,5 +40,9 @@ class WeatherContractor {
         String getCountryName();
 
         String getCityName();
+
+        void populateDataOnUI(WeatherRealm weatherRealm);
+
+        void populateDefaultScreenOnUI();
     }
 }

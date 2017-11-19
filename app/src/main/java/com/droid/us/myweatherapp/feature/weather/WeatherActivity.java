@@ -4,14 +4,20 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.droid.us.myweatherapp.R;
+import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
 import com.droid.us.myweatherapp.feature.AppBaseActivity;
+import com.droid.us.myweatherapp.utility.AppConstants;
 import com.droid.us.myweatherapp.utility.LogUtility;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,6 +41,33 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
     private String mCountryName;
 
     private String mCityName;
+
+    @BindView(R.id.tv_location)
+    TextView tvLocation;
+
+    @BindView(R.id.tv_weather_overview)
+    TextView tvWeatherOverview;
+
+    @BindView(R.id.tv_feels_like)
+    TextView tvFeelsLike;
+
+    @BindView(R.id.tv_wind_speed)
+    TextView tvWindSpeed;
+
+    @BindView(R.id.tv_humidity)
+    TextView tvHumidity;
+
+    @BindView(R.id.tv_max_temp)
+    TextView tvMaxTemp;
+
+    @BindView(R.id.tv_min_temp)
+    TextView tvMinTemp;
+
+    @BindView(R.id.tv_temp)
+    TextView tvTemp;
+
+    @BindView(R.id.iv_weather_icon)
+    ImageView ivWeatherIcon;
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -92,6 +125,64 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
         return mCityName;
     }
 
+    @Override
+    public void populateDataOnUI(@Nullable WeatherRealm weatherRealm) {
+        if (weatherRealm != null) {
+            if (!TextUtils.isEmpty(weatherRealm.getCityName())) {
+                // set the location name
+            }
+
+            if (!TextUtils.isEmpty(weatherRealm.getWeatherOverview())) {
+                //set overview
+                tvWeatherOverview.setText(weatherRealm.getWeatherOverview());
+            }
+
+            if (!TextUtils.isEmpty(weatherRealm.getWeatherDescription())) {
+                tvFeelsLike.setText(weatherRealm.getWeatherDescription());
+            }
+
+            if (weatherRealm.getHumidity() != null) {
+                String humidity = weatherRealm.getHumidity() + AppConstants.UNIT_HUMIDITY;
+                tvHumidity.setText(humidity);
+            }
+
+            if (weatherRealm.getTemp() != null) {
+                String temp = weatherRealm.getTemp() + AppConstants.DEGREE_CELCIUS;
+                tvTemp.setText(temp);
+            }
+
+            if (weatherRealm.getTempMax() != null) {
+                String maxTemp = weatherRealm.getTempMax() + AppConstants.DEGREE_CELCIUS;
+                tvMaxTemp.setText(maxTemp);
+            }
+
+            if (weatherRealm.getTempMin() != null) {
+                String minTemp = weatherRealm.getTempMin() + AppConstants.DEGREE_CELCIUS;
+                tvMinTemp.setText(minTemp);
+            }
+
+            if (weatherRealm.getWindSpeed() != null) {
+                String windSpeed = weatherRealm.getWindSpeed() + AppConstants.WIND_SPEED;
+                tvWindSpeed.setText(windSpeed);
+            } else {
+                tvWindSpeed.setText(AppConstants.EMPTY);
+            }
+
+            if (!TextUtils.isEmpty(weatherRealm.getIcon())) {
+                Picasso.with(WeatherActivity.this)
+                        .load(getString(R.string.str_open_weather_image_url)
+                                + weatherRealm.getIcon() + AppConstants.IMAGE_FORMAT)
+                        .into(ivWeatherIcon);
+            }
+        }
+    }
+
+    @Override
+    public void populateDefaultScreenOnUI() {
+
+    }
+
+
     ///////////////////////////////////////////////////////////////////////////
     // Private methods
     ///////////////////////////////////////////////////////////////////////////
@@ -99,7 +190,8 @@ public class WeatherActivity extends AppBaseActivity implements WeatherContracto
     private void initUI() {
 
         placeAutocompleteFragment =
-                (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+                (PlaceAutocompleteFragment) getFragmentManager()
+                        .findFragmentById(R.id.place_autocomplete_fragment);
 
         placeAutocompleteFragment.setOnPlaceSelectedListener(this);
     }

@@ -4,4 +4,6 @@
     <string name="str_openweather_api_key">ed999720a4aa2a7a7b8e66d771896a0d</string>
 
     <string name="str_open_weather_base_url">http://api.openweathermap.org/data/2.5/</string>
+
+    <string name="str_open_weather_image_url">http://openweathermap.org/img/w/</string>
 </resources>

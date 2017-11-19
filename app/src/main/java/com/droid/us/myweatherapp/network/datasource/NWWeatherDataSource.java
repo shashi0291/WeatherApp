@@ -5,6 +5,7 @@ import com.droid.us.myweatherapp.R;
 import com.droid.us.myweatherapp.network.BaseServer;
 import com.droid.us.myweatherapp.network.server_model.Parent;
 import com.droid.us.myweatherapp.network.service.WeatherService;
+import com.droid.us.myweatherapp.utility.NWConstantUtility;
 import com.google.android.gms.maps.model.LatLng;
 
 import io.reactivex.Single;
@@ -23,6 +24,7 @@ public class NWWeatherDataSource {
                 .create(WeatherService.class)
                 .getCurrentWeatherDetails(String.valueOf(latLng.latitude),
                         String.valueOf(latLng.longitude),
-                        appId);
+                        appId,
+                        NWConstantUtility.UNIT_METRIC);
     }
 }

@@ -14,4 +14,9 @@ public interface NWConstantUtility {
     String APP_ID = "appid";
 
     String WEATHER = "weather";
+
+    String UNIT = "units";
+
+    String UNIT_METRIC = "metric";
+
 }

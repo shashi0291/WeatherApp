@@ -11,11 +11,13 @@ import com.droid.us.myweatherapp.rx.RxError;
 import com.droid.us.myweatherapp.utility.LogUtility;
 import com.google.android.gms.maps.model.LatLng;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -104,5 +106,40 @@ class WeatherModel implements WeatherContractor.Model {
                 realm.close();
             }
         }
+    }
+
+    @Override
+    public Flowable<WeatherRealm> fetchLastSearchedCityData() {
+        return Flowable.just(true).map(new Function<Boolean, WeatherRealm>() {
+            @Override
+            public WeatherRealm apply(@NonNull Boolean aBoolean) throws Exception {
+                Realm realm = Realm.getDefaultInstance();
+                try {
+                    realm.beginTransaction();
+                    WeatherRealm personRealm = realm.where(WeatherRealm.class).findFirst();
+                    WeatherRealm weatherRealm = new WeatherRealm();
+                    weatherRealm.setCountryName(personRealm.getCountryName());
+                    weatherRealm.setCityName(personRealm.getCityName());
+                    weatherRealm.setDate(personRealm.getDate());
+                    weatherRealm.setHumidity(personRealm.getHumidity());
+                    weatherRealm.setIcon(personRealm.getIcon());
+                    weatherRealm.setTemp(personRealm.getTemp());
+                    weatherRealm.setTempMin(personRealm.getTempMin());
+                    weatherRealm.setTempMax(personRealm.getTempMax());
+                    weatherRealm.setWeatherDescription(personRealm.getWeatherDescription());
+                    weatherRealm.setWeatherOverview(personRealm.getWeatherOverview());
+                    return weatherRealm;
+                } catch (Throwable e) {
+                    if (realm.isInTransaction()) {
+                        realm.cancelTransaction();
+                    }
+                    throw e;
+                } finally {
+                    if (!realm.isClosed()) {
+                        realm.close();
+                    }
+                }
+            }
+        });
     }
 }

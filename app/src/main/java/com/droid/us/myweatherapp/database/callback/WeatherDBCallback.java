@@ -1,7 +1,5 @@
 package com.droid.us.myweatherapp.database.callback;
 
-import com.droid.us.myweatherapp.database.model_db.WeatherRealm;
-
 import io.reactivex.annotations.NonNull;
 
 /**
