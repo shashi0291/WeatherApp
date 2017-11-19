@@ -8,4 +8,6 @@ import android.app.Application;
  * @author TODO: Add your name when contributing to this class.
  */
 public class MyWeatherApplication extends Application {
+
+
 }
